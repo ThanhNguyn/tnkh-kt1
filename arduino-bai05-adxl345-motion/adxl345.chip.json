@@ -1,0 +1,10 @@
+{
+  "name": "ADXL345",
+  "author": "ThanhNguyxn",
+  "pins": ["VCC", "GND", "SCL", "SDA"],
+  "controls": [
+    {"id": "Controlx", "label": "X acceleration", "type": "range", "min": -1600, "max": 1600, "step": 1},
+    {"id": "Controly", "label": "Y acceleration", "type": "range", "min": -1600, "max": 1600, "step": 1},
+    {"id": "Controlz", "label": "Z acceleration", "type": "range", "min": -1600, "max": 1600, "step": 1}
+  ]
+}
