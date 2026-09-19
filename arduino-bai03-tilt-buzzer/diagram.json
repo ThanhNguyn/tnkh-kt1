@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "author": "ThanhNguyxn",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 0,
+      "left": 0
+    },
+    {
+      "type": "wokwi-tilt-switch",
+      "id": "tilt1",
+      "top": -20,
+      "left": 300
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer1",
+      "top": 160,
+      "left": 310,
+      "attrs": {
+        "volume": "0.3"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "tilt1:1",
+      "uno:2",
+      "green",
+      []
+    ],
+    [
+      "tilt1:2",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "buzzer1:1",
+      "uno:5",
+      "green",
+      []
+    ],
+    [
+      "buzzer1:2",
+      "uno:GND.2",
+      "black",
+      []
+    ]
+  ]
+}
