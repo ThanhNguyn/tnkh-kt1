@@ -3,18 +3,29 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <Adafruit_NeoPixel.h>
-#include <math.h>
+
+// =========================
+// PIN CONFIGURATION
+// =========================
 
 #define DHT_PIN 3
-#define DHT_TYPE DHT22
+#define DHT_TYPE DHT22   // Wokwi simulation; hardware thực tế: DHT11
 
 #define TILT_PIN 2
 #define BUZZER_PIN 5
 #define LIGHT_PIN A0
 #define RGB_LED_PIN 8
 
+// =========================
+// THRESHOLDS
+// =========================
+
 #define TEMP_THRESHOLD 35.0
 #define LIGHT_THRESHOLD 200
+
+// =========================
+// DEVICES
+// =========================
 
 DHT dht(DHT_PIN, DHT_TYPE);
 
@@ -26,11 +37,19 @@ Adafruit_NeoPixel rgb(
     NEO_GRB + NEO_KHZ800
 );
 
+// =========================
+// RGB LED
+// =========================
+
 void setRGB(uint8_t r, uint8_t g, uint8_t b)
 {
     rgb.setPixelColor(0, rgb.Color(r, g, b));
     rgb.show();
 }
+
+// =========================
+// LCD
+// =========================
 
 void displayData(
     float temperature,
@@ -57,8 +76,15 @@ void displayData(
     lcd.print(" ");
 
     lcd.print(status);
+
+    // Clear remaining characters
     lcd.print("        ");
 }
+
+// =========================
+// TILT ALARM
+// 3 short beeps
+// =========================
 
 void tiltAlarm()
 {
@@ -72,25 +98,35 @@ void tiltAlarm()
     }
 }
 
+// =========================
+// SETUP
+// =========================
+
 void setup()
 {
     Serial.begin(9600);
 
+    // DHT
     dht.begin();
 
+    // Tilt switch
     pinMode(TILT_PIN, INPUT_PULLUP);
 
+    // Buzzer
     pinMode(BUZZER_PIN, OUTPUT);
     noTone(BUZZER_PIN);
 
+    // RGB
     rgb.begin();
     rgb.clear();
     rgb.show();
 
+    // LCD
     lcd.begin();
     lcd.backlight();
     lcd.clear();
 
+    // Startup screen
     lcd.setCursor(0, 0);
     lcd.print("Smart Station");
 
@@ -102,16 +138,30 @@ void setup()
     delay(2000);
 
     lcd.clear();
+
+    // Give DHT enough time before first reading
+    delay(1000);
 }
+
+// =========================
+// LOOP
+// =========================
 
 void loop()
 {
+    // Read DHT
     float temperature = dht.readTemperature();
     float humidity = dht.readHumidity();
 
+    // Read light
     int light = analogRead(LIGHT_PIN);
 
+    // Read tilt
     bool tilted = (digitalRead(TILT_PIN) == LOW);
+
+    // =========================
+    // SERIAL MONITOR
+    // =========================
 
     Serial.print("Temp: ");
     Serial.print(temperature, 1);
@@ -125,13 +175,17 @@ void loop()
     Serial.print(" | Tilt: ");
 
     if (tilted)
+    {
         Serial.println("YES");
+    }
     else
+    {
         Serial.println("NO");
+    }
 
-    // -------------------------
+    // =========================
     // DHT ERROR
-    // -------------------------
+    // =========================
 
     if (isnan(temperature) || isnan(humidity))
     {
@@ -154,9 +208,11 @@ void loop()
         return;
     }
 
-    // -------------------------
-    // HIGH TEMPERATURE
-    // -------------------------
+    // =========================
+    // 1. HIGH TEMPERATURE
+    // T > 35 C
+    // RED + CONTINUOUS BUZZER
+    // =========================
 
     if (temperature > TEMP_THRESHOLD)
     {
@@ -167,10 +223,8 @@ void loop()
             "HOT"
         );
 
-        // RED
         setRGB(255, 0, 0);
 
-        // Continuous beep
         tone(BUZZER_PIN, 1000);
 
         delay(2000);
@@ -178,9 +232,10 @@ void loop()
         noTone(BUZZER_PIN);
     }
 
-    // -------------------------
-    // TILT
-    // -------------------------
+    // =========================
+    // 2. TILT DETECTION
+    // YELLOW + 3 SHORT BEEPS
+    // =========================
 
     else if (tilted)
     {
@@ -191,18 +246,18 @@ void loop()
             "TILT"
         );
 
-        // YELLOW
         setRGB(255, 255, 0);
 
-        // 3 short beeps
         tiltAlarm();
 
         delay(500);
     }
 
-    // -------------------------
-    // NIGHT
-    // -------------------------
+    // =========================
+    // 3. NIGHT MODE
+    // LIGHT < 200
+    // BLUE + LCD BACKLIGHT
+    // =========================
 
     else if (light < LIGHT_THRESHOLD)
     {
@@ -213,7 +268,6 @@ void loop()
             "NIGHT"
         );
 
-        // BLUE
         setRGB(0, 0, 255);
 
         noTone(BUZZER_PIN);
@@ -223,9 +277,10 @@ void loop()
         delay(2000);
     }
 
-    // -------------------------
-    // NORMAL
-    // -------------------------
+    // =========================
+    // 4. NORMAL
+    // GREEN
+    // =========================
 
     else
     {
@@ -236,7 +291,6 @@ void loop()
             "OK"
         );
 
-        // GREEN
         setRGB(0, 255, 0);
 
         noTone(BUZZER_PIN);
