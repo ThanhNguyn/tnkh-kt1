@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "author": "ThanhNguyxn",
+  "editor": "wokwi",
+
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 0,
+      "left": 0
+    },
+
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -80,
+      "left": 300,
+      "attrs": {
+        "temperature": "25",
+        "humidity": "50"
+      }
+    },
+
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "light1",
+      "top": 100,
+      "left": 300,
+      "attrs": {
+        "lux": "500"
+      }
+    },
+
+    {
+      "type": "wokwi-tilt-switch",
+      "id": "tilt1",
+      "top": 280,
+      "left": 300
+    },
+
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer1",
+      "top": 400,
+      "left": 300,
+      "attrs": {
+        "volume": "0.3"
+      }
+    },
+
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": -80,
+      "left": 550,
+      "attrs": {
+        "pins": "i2c"
+      }
+    },
+
+    {
+      "type": "wokwi-neopixel",
+      "id": "rgb1",
+      "top": 250,
+      "left": 550
+    }
+  ],
+
+  "connections": [
+    ["uno:5V", "dht1:VCC", "red", []],
+    ["uno:GND.1", "dht1:GND", "black", []],
+    ["uno:3", "dht1:SDA", "green", []],
+
+    ["uno:5V", "light1:VCC", "red", []],
+    ["uno:GND.2", "light1:GND", "black", []],
+    ["uno:A0", "light1:AO", "green", []],
+
+    ["uno:2", "tilt1:1", "green", []],
+    ["uno:GND.3", "tilt1:2", "black", []],
+
+    ["uno:5", "buzzer1:1", "green", []],
+    ["uno:GND.4", "buzzer1:2", "black", []],
+
+    ["uno:5V", "lcd1:VCC", "red", []],
+    ["uno:GND.5", "lcd1:GND", "black", []],
+    ["uno:A4", "lcd1:SDA", "green", []],
+    ["uno:A5", "lcd1:SCL", "blue", []],
+
+    ["uno:5V", "rgb1:VDD", "red", []],
+    ["uno:GND.6", "rgb1:VSS", "black", []],
+    ["uno:8", "rgb1:DIN", "green", []]
+  ]
+}
