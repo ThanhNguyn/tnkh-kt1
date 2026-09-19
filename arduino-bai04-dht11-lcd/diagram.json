@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "author": "ThanhNguyxn",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 0,
+      "left": 0
+    },
+    {
+      "type": "wokwi-dht11",
+      "id": "dht1",
+      "top": -20,
+      "left": 300
+    },
+    {
+      "type": "wokwi-lcd1602",
+      "id": "lcd1",
+      "top": 180,
+      "left": 270,
+      "attrs": {
+        "pins": "i2c",
+        "i2cAddress": "0x27"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "dht1:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "dht1:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "dht1:SDA",
+      "uno:3",
+      "green",
+      []
+    ],
+    [
+      "lcd1:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "lcd1:GND",
+      "uno:GND.2",
+      "black",
+      []
+    ],
+    [
+      "lcd1:SDA",
+      "uno:A4",
+      "green",
+      []
+    ],
+    [
+      "lcd1:SCL",
+      "uno:A5",
+      "blue",
+      []
+    ]
+  ]
+}
